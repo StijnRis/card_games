@@ -14,7 +14,9 @@ impl<T> Players<T> where T: Player {
         }
     }
 
-    pub fn get(index: usize) -> &Player
+    pub fn get(index: usize) -> &Player<T> {
+        
+    }
 
     pub fn add_player(&mut self, player: T) {
         self.players.push(player);
