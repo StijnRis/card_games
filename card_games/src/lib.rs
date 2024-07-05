@@ -1,8 +1,6 @@
 mod card;
-pub mod game;
-pub mod games;
+pub mod mau_mau;
 mod pile;
 pub mod player;
 mod players;
 mod settings;
-

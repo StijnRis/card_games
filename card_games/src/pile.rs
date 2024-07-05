@@ -82,13 +82,19 @@ impl Pile {
         self.cards.clear();
     }
 
-    pub fn get_drawing(&self) -> String {
+    pub fn get_drawing(&self) -> (String, String) {
         let mut drawing = String::new();
+        let mut numbers = String::new();
+        let mut index = 1;
         for card in &self.cards {
             drawing.push_str(&card.get_drawing());
             drawing.push_str(" ");
+            numbers.push_str(index.to_string().as_str());
+            numbers.push_str(" ");
+
+            index += 1;
         }
-        drawing
+        (drawing, numbers)
     }
 
     pub fn len(&self) -> usize {
@@ -96,14 +102,28 @@ impl Pile {
     }
 
     pub fn select_card(&mut self) -> Option<Card> {
-        println!("Your hand: {}", self.get_drawing());
-        println!("Select a card to play by typing its index: ");
+        self.draw_selection();
+        let selection = self.get_selection();
+        self.take_card(selection)
+    }
+
+    fn draw_selection(&self) {
+        let drawing = self.get_drawing();
+        println!("Your hand: {}", drawing.0);
+        println!("           {}", drawing.1);
+    }
+
+    fn get_selection(&self) -> usize {
         let mut input_line = String::new();
         io::stdin()
             .read_line(&mut input_line)
             .expect("Failed to read line");
-        let index: usize = input_line.trim().parse().expect("Input not an integer");
-        self.take_card(index)
+        let index = input_line.trim().parse();
+        if index.is_err() {
+            println!("Please enter a number between 1 and {}", self.len());
+            return self.get_selection();
+        }
+        index.expect("Input not an integer")
     }
 }
 
@@ -129,6 +149,6 @@ mod tests {
         cards.add_card(Card::new(2, Suit::Hearts));
         cards.add_card(Card::new(3, Suit::Hearts));
 
-        assert_eq!("A♥ 2♥ 3♥ ", cards.get_drawing());
+        assert_eq!("A♥ 2♥ 3♥ ", cards.get_drawing().0);
     }
 }

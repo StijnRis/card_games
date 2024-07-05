@@ -1,43 +1,51 @@
 use crate::pile::Pile;
 use crate::player::Player;
 
-pub struct Players<T>
-where
-    T: Player,
+pub struct Players
 {
     current_player_index: usize,
-    pub players: Vec<T>,
+    pub players: Vec<Player>,
 }
 
-impl<T> Players<T>
-where
-    T: Player,
+impl Players
 {
-    pub fn new() -> Players<T> {
+    pub fn new() -> Players {
         Players {
             current_player_index: 0,
             players: vec![],
         }
     }
 
-    pub fn add_player(&mut self, player: T) {
+    pub fn len(&self) -> usize {
+        self.players.len()
+    }
+
+    pub fn get(&self, index: usize) -> Option<&Player> {
+        self.players.get(index)
+    }
+
+    pub fn get_mut(&mut self, index: usize) -> Option<&mut Player> {
+        self.players.get_mut(index)
+    }
+
+    pub fn add_player(&mut self, player: Player) {
         self.players.push(player);
     }
 
-    pub fn get_current_player(&self) -> &T {
+    pub fn get_current_player(&self) -> &Player {
         self.players.get(self.current_player_index).unwrap()
     }
 
-    pub fn get_current_player_mut(&mut self) -> &mut T {
+    pub fn get_current_player_mut(&mut self) -> &mut Player {
         self.players.get_mut(self.current_player_index).unwrap()
     }
 
-    pub fn get_next_player_at_mut(&mut self, position: usize) -> &mut T {
+    pub fn get_next_player_at_mut(&mut self, position: usize) -> &mut Player {
         let index = (self.current_player_index + position) % self.players.len();
         self.players.get_mut(index).unwrap()
     }
 
-    pub fn get_next_player_at(&self, position: usize) -> &T {
+    pub fn get_next_player_at(&self, position: usize) -> &Player {
         let index = (self.current_player_index + position) % self.players.len();
         self.players.get(index).unwrap()
     }
@@ -49,15 +57,15 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::player::{DefaultPlayer, Player};
+    use crate::player::Player;
     use crate::players::Players;
 
     #[test]
     fn add_players() {
         let mut players = Players::new();
-        players.add_player(DefaultPlayer::new("Piet".to_owned()));
-        players.add_player(DefaultPlayer::new("Jan".to_owned()));
-        players.add_player(DefaultPlayer::new("Klaas".to_owned()));
+        players.add_player(Player::new("Piet"));
+        players.add_player(Player::new("Jan"));
+        players.add_player(Player::new("Klaas"));
 
         assert_eq!(players.players.len(), 3);
     }
@@ -65,9 +73,9 @@ mod tests {
     #[test]
     fn get_current_player() {
         let mut players = Players::new();
-        players.add_player(DefaultPlayer::new("Piet".to_owned()));
-        players.add_player(DefaultPlayer::new("Jan".to_owned()));
-        players.add_player(DefaultPlayer::new("Klaas".to_owned()));
+        players.add_player(Player::new("Piet"));
+        players.add_player(Player::new("Jan"));
+        players.add_player(Player::new("Klaas"));
 
         assert_eq!(players.get_current_player().get_name(), "Piet");
         players.next_round();
@@ -79,8 +87,8 @@ mod tests {
     #[test]
     fn go_round() {
         let mut players = Players::new();
-        players.add_player(DefaultPlayer::new("Piet".to_owned()));
-        players.add_player(DefaultPlayer::new("Jan".to_owned()));
+        players.add_player(Player::new("Piet"));
+        players.add_player(Player::new("Jan"));
 
         assert_eq!(players.get_current_player().get_name(), "Piet");
         players.next_round();
@@ -92,9 +100,9 @@ mod tests {
     #[test]
     fn get_next_player() {
         let mut players = Players::new();
-        players.add_player(DefaultPlayer::new("Piet".to_owned()));
-        players.add_player(DefaultPlayer::new("Jan".to_owned()));
-        players.add_player(DefaultPlayer::new("Klaas".to_owned()));
+        players.add_player(Player::new("Piet"));
+        players.add_player(Player::new("Jan"));
+        players.add_player(Player::new("Klaas"));
 
         assert_eq!(players.get_next_player_at(0).get_name(), "Piet");
         assert_eq!(players.get_next_player_at(1).get_name(), "Jan");
