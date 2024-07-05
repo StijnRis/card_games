@@ -28,9 +28,9 @@ impl MauMau {
         &mut self.stock
     }
 
-    pub fn deal(&mut self, deck: &mut Pile, number_of_cards: usize) {
+    pub fn deal(&mut self, number_of_cards: usize) {
         for player in self.players.players.iter_mut() {
-            player.deal(deck, number_of_cards); 
+            player.deal(&mut self.stock, number_of_cards); 
         }
     }
 }
@@ -50,7 +50,7 @@ impl Game<MauMauPlayer> for MauMau {
 
     fn start(&mut self) {
         self.stock.add_deck();
-        self.deal(&mut self.stock, 5);
+        self.deal(5);
 
         loop {
             let current_player = self.players.get_current_player_mut();
@@ -92,7 +92,7 @@ impl MauMauPlayer {
         self.hand.add_cards(deck.take_top_cards(3));
     }
 
-    fn select_card(&self) -> Option<Card> {
+    fn select_card(&mut self) -> Option<Card> {
         self.hand.select_card()
     }
 }

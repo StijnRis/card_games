@@ -1,21 +1,23 @@
-use crate::player::Player;
 use crate::pile::Pile;
+use crate::player::Player;
 
-pub struct Players<T> where T: Player {
+pub struct Players<T>
+where
+    T: Player,
+{
     current_player_index: usize,
     pub players: Vec<T>,
 }
 
-impl<T> Players<T> where T: Player {
+impl<T> Players<T>
+where
+    T: Player,
+{
     pub fn new() -> Players<T> {
         Players {
             current_player_index: 0,
             players: vec![],
         }
-    }
-
-    pub fn get(index: usize) -> &Player<T> {
-        
     }
 
     pub fn add_player(&mut self, player: T) {
@@ -26,7 +28,7 @@ impl<T> Players<T> where T: Player {
         self.players.get(self.current_player_index).unwrap()
     }
 
-    pub fn get_current_player_mut(&mut self) ->  &mut T {
+    pub fn get_current_player_mut(&mut self) -> &mut T {
         self.players.get_mut(self.current_player_index).unwrap()
     }
 
@@ -44,8 +46,6 @@ impl<T> Players<T> where T: Player {
         self.current_player_index = (self.current_player_index + 1) % self.players.len();
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {

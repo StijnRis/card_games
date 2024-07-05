@@ -26,9 +26,9 @@ impl Game<ShitHeadPlayer> for ShitHead {
 
     fn start(&mut self) {
         self.stock.add_deck();
-        for i in 0..self.players.iter() {
-            self.players.get(i).deal();
-        }
+        // for i in 0..self.players.iter() {
+        //     self.players.get(i).deal();
+        // }
 
         loop {
             let current_player = self.players.get_current_player_mut();
@@ -39,8 +39,7 @@ impl Game<ShitHeadPlayer> for ShitHead {
                     card = current_player.get_hand_mut().select_card();
                 } else if current_player.get_shown().len() != 0 {
                     card = current_player.get_shown_mut().select_card();
-                } 
-                
+                }
             }
 
             let difference = 3 - current_player.get_hand().get_cards().len();
