@@ -3,6 +3,7 @@ use std::fmt::{Display, Formatter};
 
 use strum_macros::EnumIter;
 
+#[derive(PartialEq)]
 pub struct Card {
     pub level: i8,
     pub suit: Suit,

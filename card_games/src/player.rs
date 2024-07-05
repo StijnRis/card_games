@@ -1,5 +1,6 @@
 use crate::{card::Card, pile::Pile};
 
+#[derive(PartialEq)]
 pub struct Player {
     name: String,
     hand: Pile,

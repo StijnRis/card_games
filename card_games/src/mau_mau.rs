@@ -1,3 +1,4 @@
+use crate::card::Card;
 use crate::pile::Pile;
 use crate::player::Player;
 use crate::players::Players;
@@ -28,6 +29,22 @@ impl MauMau {
         }
     }
 
+    pub fn get_stock(&self) -> &Pile {
+        &self.stock
+    }
+
+    pub fn get_stock_mut(&mut self) -> &mut Pile {
+        &mut self.stock
+    }
+
+    pub fn get_players_mut(&mut self) -> &mut Players {
+        &mut self.players
+    }
+
+    pub fn get_players(&self) -> &Players {
+        &self.players
+    }
+
     pub fn add_player(&mut self, name: String) {
         self.players.add_player(Player::new(&name));
     }
@@ -50,6 +67,10 @@ impl MauMau {
 
             self.players.next_round();
         }
+    }
+
+    pub fn play_card(&mut self, player: &Player, card: &Card) {
+        // self.played.add_card(card);
     }
 }
 

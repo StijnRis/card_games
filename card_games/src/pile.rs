@@ -6,6 +6,7 @@ use strum::IntoEnumIterator;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 
+#[derive(PartialEq)]
 pub struct Pile {
     cards: Vec<Card>,
 }

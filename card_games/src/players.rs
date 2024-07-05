@@ -53,6 +53,12 @@ impl Players
     pub fn next_round(&mut self) {
         self.current_player_index = (self.current_player_index + 1) % self.players.len();
     }
+
+    pub fn get_ith_player_after_mut(&mut self, player: &Player, i: usize) -> &mut Player {
+        let index = self.players.iter().position(|p| p == player).unwrap();
+        let next_index = (index + i) % self.players.len();
+        self.players.get_mut(next_index).unwrap()
+    }
 }
 
 #[cfg(test)]
