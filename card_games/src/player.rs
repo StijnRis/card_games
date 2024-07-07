@@ -30,7 +30,14 @@ impl Player {
         self.hand.add_cards(deck.take_top_cards(number_of_cards));
     }
 
-    pub fn select_card(&mut self) -> Option<Card> {
-        self.hand.select_card()
+    pub fn select_card(&mut self) -> usize {
+        self.draw_options();
+        self.hand.user_select_card()
+    }
+
+    fn draw_options(&self) {
+        let drawing = self.hand.get_drawing();
+        println!("{} hand:", self.name);
+        println!("{}", drawing);
     }
 }

@@ -3,7 +3,7 @@ use std::io;
 use crate::card::{Card, Suit};
 use strum::IntoEnumIterator;
 
-use rand::seq::SliceRandom;
+use rand::seq::{index, SliceRandom};
 use rand::thread_rng;
 
 #[derive(PartialEq)]
@@ -53,11 +53,11 @@ impl Pile {
     }
 
     pub fn take_card(&mut self, index: usize) -> Option<Card> {
-        if index < self.cards.len() {
-            Some(self.cards.remove(index))
-        } else {
-            None
+        if index >= self.cards.len() || index < 0 {
+            return None;
         }
+
+        Some(self.cards.remove(index))
     }
 
     pub fn take_top_card(&mut self) -> Option<Card> {
@@ -83,7 +83,7 @@ impl Pile {
         self.cards.clear();
     }
 
-    pub fn get_drawing(&self) -> (String, String) {
+    pub fn get_drawing(&self) -> String {
         let mut drawing = String::new();
         let mut numbers = String::new();
         let mut index = 1;
@@ -91,40 +91,32 @@ impl Pile {
             drawing.push_str(&card.get_drawing());
             drawing.push_str(" ");
             numbers.push_str(index.to_string().as_str());
-            numbers.push_str(" ");
+
+            let len: usize = card.get_drawing().chars().count() + 1 - index.to_string().len();
+            for _ in 0..len {
+                numbers.push(' ');
+            }
 
             index += 1;
         }
-        (drawing, numbers)
+        format!("{}\n{}", drawing, numbers)
     }
 
     pub fn len(&self) -> usize {
         self.cards.len()
     }
 
-    pub fn select_card(&mut self) -> Option<Card> {
-        self.draw_selection();
-        let selection = self.get_selection();
-        self.take_card(selection)
-    }
-
-    fn draw_selection(&self) {
-        let drawing = self.get_drawing();
-        println!("Your hand: {}", drawing.0);
-        println!("           {}", drawing.1);
-    }
-
-    fn get_selection(&self) -> usize {
+    pub fn user_select_card(&self) -> usize {
         let mut input_line = String::new();
         io::stdin()
             .read_line(&mut input_line)
             .expect("Failed to read line");
-        let index = input_line.trim().parse();
+        let index = input_line.trim().parse::<usize>();
         if index.is_err() {
             println!("Please enter a number between 1 and {}", self.len());
-            return self.get_selection();
+            return self.user_select_card();
         }
-        index.expect("Input not an integer")
+        index.expect("Input not an integer") - 1
     }
 }
 
@@ -150,6 +142,16 @@ mod tests {
         cards.add_card(Card::new(2, Suit::Hearts));
         cards.add_card(Card::new(3, Suit::Hearts));
 
-        assert_eq!("A♥ 2♥ 3♥ ", cards.get_drawing().0);
+        assert_eq!("A♥ 2♥ 3♥ \n1  2  3  ", cards.get_drawing());
+    }
+
+    #[test]
+    fn test_get_drawing_ten() {
+        let mut cards = Pile::new();
+        cards.add_card(Card::new(10, Suit::Hearts));
+        cards.add_card(Card::new(2, Suit::Hearts));
+        cards.add_card(Card::new(3, Suit::Hearts));
+
+        assert_eq!("10♥ 2♥ 3♥ \n1   2  3  ", cards.get_drawing());
     }
 }

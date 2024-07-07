@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 
 use strum_macros::EnumIter;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub struct Card {
     pub level: i8,
     pub suit: Suit,
@@ -29,6 +29,17 @@ impl Card {
             12 => format!("Q{}", self.suit),
             13 => format!("K{}", self.suit),
             _ => format!("{}{}", self.level, self.suit),
+        }
+    }
+
+    pub fn can_play_on(&self, other: &Card) -> bool {
+        self.suit == other.suit || self.level == other.level
+    }
+
+    pub fn get_punishment(&self) -> usize {
+        match self.level {
+            2 => 2,
+            _ => 0,
         }
     }
 }
